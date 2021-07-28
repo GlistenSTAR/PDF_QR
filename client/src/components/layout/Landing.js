@@ -17,19 +17,20 @@ class Landing extends Component {
           <div className="container">
             <div className="row">
               <div className="col-md-12 text-center">
-                <h1 className="display-3 mb-4">Developer Connector</h1>
-                <p className="lead">
-                  {' '}
-                  Create a developer profile/portfolio, share posts and get help
-                  from other developers
-                </p>
-                <hr />
-                <Link to="/register" className="btn btn-lg btn-info mr-2">
-                  Sign Up
-                </Link>
-                <Link to="/login" className="btn btn-lg btn-light">
-                  Login
-                </Link>
+                    <div className='landing-inner'>
+                      <h1 className='x-large'>Whole PDF Reader</h1>
+                      <p className='lead'>
+                        It's can read the pdf files, upload the pdf files, saw about pdf info using QR code scanner and etc...
+                      </p>
+                      <div className='buttons'>
+                        <Link to='/register' className='btn btn-info btn-lg'>
+                          Sign Up
+                        </Link>
+                        <Link to='/login' className='btn btn-light btn-lg'>
+                          Login
+                        </Link>
+                      </div>
+                  </div>
               </div>
             </div>
           </div>

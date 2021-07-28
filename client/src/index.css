@@ -1,5 +1,10 @@
+@font-face {
+  font-family: Roboto;
+  src: url('./fonts/Simplo-Medium.otf');
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family:'Roboto';
 }
