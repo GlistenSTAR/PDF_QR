@@ -82,58 +82,25 @@ import {
 // };
 
 // Add post
-export const upload_pdf = formData => async dispatch => {
+export const upload_pdf = (file, content) => async dispatch => {
   console.log("uploading started....")
-  console.log(formData)
-  axios.post("http://localhost:8000/upload", formData, { 
-    // receive two    parameter endpoint url ,form data
-  })
-  // try {
-  //   const res = await api.post('/posts', formData);
-
-  //   dispatch({
-  //     type: ADD_POST,
-  //     payload: res.data
-  //   });
-
-  //   dispatch(setAlert('Post Created', 'success'));
-  // } catch (err) {
-  //   dispatch({
-  //     type: POST_ERROR,
-  //     payload: { msg: err.response.statusText, status: err.response.status }
-  //   });
-  // }
-};
-
-// Get post
-export const getPost = id => async dispatch => {
-  console.log(id)
+  const data = new FormData() 
+  data.append('pdf_file', file)
+  data.append('data', JSON.stringify(content))
   try {
-    const res = await api.get(`/posts/${id}`);
+    const config = {
+        headers: {
+            'content-type': 'multipart/form-data'
+        }
+    };
+    const res = await api.post('/pdf_upload', data, config);
 
     dispatch({
-      type: GET_POST,
-      payload: res.data
-    });
-  } catch (err) {
-    dispatch({
-      type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
-    });
-  }
-};
-
-// Add comment
-export const addComment = (postId, formData) => async dispatch => {
-  try {
-    const res = await api.post(`/posts/comment/${postId}`, formData);
-
-    dispatch({
-      type: ADD_COMMENT,
+      type: ADD_POST,
       payload: res.data
     });
 
-    dispatch(setAlert('Comment Added', 'success'));
+    dispatch(setAlert('Post Created', 'success'));
   } catch (err) {
     dispatch({
       type: POST_ERROR,
@@ -142,21 +109,58 @@ export const addComment = (postId, formData) => async dispatch => {
   }
 };
 
-// Delete comment
-export const deleteComment = (postId, commentId) => async dispatch => {
-  try {
-    await api.delete(`/posts/comment/${postId}/${commentId}`);
+// // Get post
+// export const getPost = id => async dispatch => {
+//   console.log(id)
+//   try {
+//     const res = await api.get(`/posts/${id}`);
 
-    dispatch({
-      type: REMOVE_COMMENT,
-      payload: commentId
-    });
+//     dispatch({
+//       type: GET_POST,
+//       payload: res.data
+//     });
+//   } catch (err) {
+//     dispatch({
+//       type: POST_ERROR,
+//       payload: { msg: err.response.statusText, status: err.response.status }
+//     });
+//   }
+// };
 
-    dispatch(setAlert('Comment Removed', 'success'));
-  } catch (err) {
-    dispatch({
-      type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
-    });
-  }
-};
+// // Add comment
+// export const addComment = (postId, formData) => async dispatch => {
+//   try {
+//     const res = await api.post(`/posts/comment/${postId}`, formData);
+
+//     dispatch({
+//       type: ADD_COMMENT,
+//       payload: res.data
+//     });
+
+//     dispatch(setAlert('Comment Added', 'success'));
+//   } catch (err) {
+//     dispatch({
+//       type: POST_ERROR,
+//       payload: { msg: err.response.statusText, status: err.response.status }
+//     });
+//   }
+// };
+
+// // Delete comment
+// export const deleteComment = (postId, commentId) => async dispatch => {
+//   try {
+//     await api.delete(`/posts/comment/${postId}/${commentId}`);
+
+//     dispatch({
+//       type: REMOVE_COMMENT,
+//       payload: commentId
+//     });
+
+//     dispatch(setAlert('Comment Removed', 'success'));
+//   } catch (err) {
+//     dispatch({
+//       type: POST_ERROR,
+//       payload: { msg: err.response.statusText, status: err.response.status }
+//     });
+//   }
+// };

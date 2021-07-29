@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import DataTable from "react-data-table-component";
@@ -29,7 +29,8 @@ const columns = [
 const pdfs_datas = []
 
 const Dashboard = ({
-  auth: { user }
+  auth: { user }, 
+  upload_pdf
 }) => {
 
   const [openModal, setOpenModal] = useState(false);
@@ -45,9 +46,7 @@ const Dashboard = ({
 
   const onClickHandler = (e) => {
     e.preventDefault();
-    const data = new FormData() 
-    data.append('file', selectFile)
-    upload_pdf(data)
+    upload_pdf(selectFile, formData)
   }
   
   const onChange = (e) => {
@@ -90,7 +89,7 @@ const Dashboard = ({
               </Modal.Header>
               <Modal.Body>
                 <form onSubmit={ onClickHandler } className="form">
-                  <input type="file" name="file" onChange={onChangeHandler}/>
+                  <input type="file" name="file" onChange={onChangeHandler}  accept=".pdf"/>
                   <div className="form-group mt-2">
                     <label htmlFor="title">Title : </label>
                     <input type="text" name="title" className="form-control" onChange = { onChange }/>
