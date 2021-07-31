@@ -349,7 +349,11 @@ nav{
   color: white;
 }
 
-.navbar-brand{
+.navbar a{
+  font-size: large;
+}
+
+a.navbar-brand{
   font-size: xx-large;
 }
 
