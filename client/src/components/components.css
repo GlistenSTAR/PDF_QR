@@ -17,3 +17,8 @@
   border: 2px solid #31B0D5!important;
   outline: none;
 }
+
+.list_pdf{
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-size: 14px;
+}

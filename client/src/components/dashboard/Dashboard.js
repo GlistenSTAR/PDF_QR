@@ -1,36 +1,73 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import DataTable from "react-data-table-component";
 import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { upload_pdf } from '../../actions/pdf_upload';
+import { upload_pdf, getPDFs } from '../../actions/pdf_upload';
+
+const customStyles = {
+  table:{
+    style:{
+      borderRadius : '10px'
+    }
+  },
+  rows: {
+    style: {
+      minHeight: '52px', // override the row height
+      fontSize:'14px'
+    }
+  },
+  headCells: {
+    style: {
+      paddingLeft: '8px', // override the cell padding for head cells
+      paddingRight: '8px',
+      fontSize:'16px',
+      background:'#6bb8cf'
+    },
+  },
+  cells: {
+    style: {
+      paddingLeft: '8px', // override the cell padding for data cells
+      paddingRight: '8px',
+    },
+  },
+};
 
 const columns = [
   {
     name: "Title",
     selector: "title",
-    sortable: true
+    sortable: true,
+    width:'20%'
   },
   {
     name: "Uploader",
-    selector: "director",
-    sortable: true
+    selector: "uploader",
+    sortable: true,
+    width:'10%'
   },
   {
-    name: "Viewd number",
-    selector: "runtime",
+    name: "Description",
+    selector: "description",
     sortable: true,
-    right: true
+  },
+  {
+    name: "Views",
+    selector: "views",
+    width:'10%',
+    sortable: true,
+    right: true,
   }
 ];
 
-const pdfs_datas = []
-
 const Dashboard = ({
-  auth: { user }, 
-  upload_pdf
+  auth: { user },
+  pdf, 
+  upload_pdf,
+  history,
+  getPDFs
 }) => {
 
   const [openModal, setOpenModal] = useState(false);
@@ -40,13 +77,18 @@ const Dashboard = ({
     description: ''
   });
 
+  useEffect(() => {
+    getPDFs();
+  }, [getPDFs]);
+
+
   const onChangeHandler =(e) => {
     setSelectFile(e.target.files[0]);
   }
 
   const onClickHandler = (e) => {
     e.preventDefault();
-    upload_pdf(selectFile, formData)
+    upload_pdf(selectFile, formData, history, user)
   }
   
   const onChange = (e) => {
@@ -56,22 +98,27 @@ const Dashboard = ({
   return (
     <>
       <Fragment>
-        <h1 className="large text-primary">Dashboard</h1>
+        <h1 className="large text-primary mt-5">Dashboard</h1>
         <p className="lead">
-          <i className="fas fa-user" /> Welcome {user && user.name}
+          <i className="fas fa-user"/> Welcome {user && user.name}
         </p>
-          
           <Fragment>
-            <button className="btn btn-success my-1" onClick={() => setOpenModal(true)}>
+            <button className="btn btn-success my-1 btn-lg" onClick={() => setOpenModal(true)}>
               Upload New PDF
             </button>
-            <div className="list_pdf mt-5">
+            <span className="text-danger" style={{display:'flex', alignItems:'center', justifyContent: 'center'}}>You can upload the new pdf on here.</span>  
+
+            <p className="mt-5 mb-3 lead">
+              <i className="fas fa-file-pdf"/> 
+              {' '}PDF Lists
+            </p>
+            <div className="list_pdf">
               <DataTable
-                title="PDF Lists"
                 columns={columns}
-                data={pdfs_datas}
+                data={pdf.pdfs ? pdf.pdfs:''}
                 defaultSortFieldId={1}
                 pagination
+                customStyles={customStyles}
                 selectableRows
               />
             </div>
@@ -111,13 +158,16 @@ const Dashboard = ({
 
 Dashboard.propTypes = {
   upload_pdf: PropTypes.func,
-  auth: PropTypes.object.isRequired
+  getPDFs : PropTypes.func,
+  auth: PropTypes.object.isRequired,
+  pdf: PropTypes.object
 };
 
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
+  pdf : state.pdf
 });
 
-export default connect(mapStateToProps, { upload_pdf })(
+export default connect(mapStateToProps, { upload_pdf, getPDFs })(
   Dashboard
 );
