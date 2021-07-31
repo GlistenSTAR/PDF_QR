@@ -3,6 +3,7 @@ const connectDB = require('./config/db');
 const path = require('path');
 
 const app = express();
+// global.__basedir = __dirname;
 
 // Connect Database
 connectDB();
@@ -16,6 +17,7 @@ app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/pdfs', require('./routes/api/pdfs'));
 app.use('/api/pdf_upload', require('./routes/api/pdf_upload'))
+app.use('/api/pdf', express.static(__dirname + '/upload'));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
