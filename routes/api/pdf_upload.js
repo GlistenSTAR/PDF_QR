@@ -1,9 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const config = require('config');
-const { check, validationResult } = require('express-validator');
 const multer = require("multer");
 const File = require('../../models/pdf_files');
 const path = require("path");
@@ -12,9 +8,11 @@ const path = require("path");
 const storage = multer.diskStorage({
   destination: "./upload/",
   filename: function(req, file, cb){
-     cb(null, "PDF-" + Date.now() + path.extname(file.originalname));
+     cb(null, Date.now() + path.extname(file.originalname));
+     cb(null, Date.now() + "-" + file.originalname);
   }
-});
+}
+);
 
 const upload = multer({
   storage: storage,
@@ -27,12 +25,17 @@ router.post(
     upload(req, res, () => {
       console.log("Request ---", req.body.data);
       console.log("Request file ---", req.file);//Here you get file.
+      const data = JSON.parse(req.body.data)
       const file = new File();
       file.meta_data = req.file;
+      file.changedName = Date.now() + path.extname(req.file.originalname)
+      file.originName = Date.now() + "-" + req.file.originalname
+      file.title = data.title
+      file.description = data.description
+      file.uploader = data.uploader
       file.save().then(()=>{
-        res.send({message:"uploaded successfully"})
+        res.send({ message : "uploaded successfully" })
       })
-      /*Now do where ever you want to do*/
    });
   }
 );
