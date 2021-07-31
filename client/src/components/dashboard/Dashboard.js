@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import DataTable from "react-data-table-component";
 import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Moment from 'react-moment';
+import api from '../../utils/api';
+
 
 import { upload_pdf, getPDFs } from '../../actions/pdf_upload';
 
@@ -24,7 +27,7 @@ const customStyles = {
       paddingLeft: '8px', // override the cell padding for head cells
       paddingRight: '8px',
       fontSize:'16px',
-      background:'#6bb8cf'
+      background:'rgb(101 101 243 / 69%)'
     },
   },
   cells: {
@@ -35,27 +38,35 @@ const customStyles = {
   },
 };
 
+const openPDF = (name, id) => {
+  window.open(`http://localhost:5000/api/pdf/${name}`);
+}
+
 const columns = [
   {
     name: "Title",
-    selector: "title",
+    cell: row => <div data-tag="allowRowEvents" onClick={()=>openPDF(row.meta_data.filename, row._id)}><div style={{ color:'blue', cursor:'pointer'}}>{row.title}</div></div>,
     sortable: true,
     width:'20%'
   },
   {
     name: "Uploader",
-    selector: "uploader",
+    cell: row => `${row.uploader}`,
     sortable: true,
     width:'10%'
   },
   {
     name: "Description",
-    selector: "description",
-    sortable: true,
+    cell: row => `${row.description}`,
+    width:'40%'
+  },
+  {
+    name: "Create_at",
+    cell: row => <Moment format="YYYY/MM/DD hh:mm">{row.create_at}</Moment>
   },
   {
     name: "Views",
-    selector: "views",
+    cell: row => `${row.views}`,
     width:'10%',
     sortable: true,
     right: true,
@@ -95,6 +106,8 @@ const Dashboard = ({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
+  
+
   return (
     <>
       <Fragment>
@@ -120,6 +133,8 @@ const Dashboard = ({
                 pagination
                 customStyles={customStyles}
                 selectableRows
+                striped
+                pointerOnHover
               />
             </div>
           </Fragment>
@@ -136,7 +151,10 @@ const Dashboard = ({
               </Modal.Header>
               <Modal.Body>
                 <form onSubmit={ onClickHandler } className="form">
-                  <input type="file" name="file" onChange={onChangeHandler}  accept=".pdf"/>
+                  <div className="form-group mt-2">
+                    <label htmlFor="file">Select PDF : {' '}</label><br></br>
+                    <input type="file" name="file" onChange={onChangeHandler}  accept=".pdf"/>
+                  </div>
                   <div className="form-group mt-2">
                     <label htmlFor="title">Title : </label>
                     <input type="text" name="title" className="form-control" onChange = { onChange }/>

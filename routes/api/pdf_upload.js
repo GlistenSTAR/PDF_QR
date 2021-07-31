@@ -28,8 +28,6 @@ router.post(
       const data = JSON.parse(req.body.data)
       const file = new File();
       file.meta_data = req.file;
-      file.changedName = Date.now() + path.extname(req.file.originalname)
-      file.originName = Date.now() + "-" + req.file.originalname
       file.title = data.title
       file.description = data.description
       file.uploader = data.uploader

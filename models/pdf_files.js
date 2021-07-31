@@ -3,13 +3,6 @@ const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
   meta_data:{},
-  changedName: {
-    type: String,
-    required: true
-  },
-  originName: {
-    type: String
-  },
   title: {
     type: String
   },
