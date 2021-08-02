@@ -17,4 +17,16 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+router.post('/addViews', auth, async (req, res) => {
+  console.log(req.body.id)
+  try {
+    const posts = await File.findOne({_id: req.body.id});
+    posts.views++;
+    posts.save().then(res => res.json(posts))
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
