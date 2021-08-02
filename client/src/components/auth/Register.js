@@ -57,10 +57,6 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
               value={email}
               onChange={onChange}
             />
-            <small className="form-text" align="left">
-              This site uses Gravatar so if you want a profile image, use a
-              Gravatar email
-            </small>
           </div>
           <div className="form-group">
             <input
