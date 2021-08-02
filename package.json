@@ -21,10 +21,14 @@
     "express": "^4.17.1",
     "express-validator": "^6.8.1",
     "gravatar": "^1.8.1",
+    "hummus": "^1.0.110",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.8",
     "multer": "^1.4.2",
-    "normalize-url": "^5.3.0"
+    "normalize-url": "^5.3.0",
+    "pdf-lib": "^1.16.0",
+    "pdfkit": "^0.12.1",
+    "qr-image": "^3.2.0"
   },
   "devDependencies": {
     "concurrently": "^5.3.0",
