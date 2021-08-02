@@ -53,6 +53,12 @@ router.post(
           .json({ errors: [{ msg: 'Invalid Credentials' }] });
       }
 
+      if(user.role < 1){
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Please waiting admin accept!' }] });
+      }
+
       const payload = {
         user: {
           id: user.id

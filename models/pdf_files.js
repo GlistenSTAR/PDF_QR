@@ -12,9 +12,16 @@ const PostSchema = new Schema({
   uploader : {
     type:String
   },
+  changedName : {
+    type:String
+  },
   create_at : {
       type: Date,
       default: Date.now
+  },
+  views : {
+    type:Number,
+    default: 0
   }
 });
 

@@ -44,3 +44,19 @@ export const upload_pdf = (file, content, history, auth) => async dispatch => {
   }
 };
 
+export const addViews = (id, history) => async dispatch =>{
+  try {
+    const res = await api.post('/pdfs/addViews', id);
+    history.push('/');
+    dispatch({
+      type: GET_PDFS,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: PDF_ERROR,
+      payload: { msg: err.response }
+    });
+  }
+}
+

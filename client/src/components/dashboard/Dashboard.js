@@ -5,10 +5,8 @@ import DataTable from "react-data-table-component";
 import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Moment from 'react-moment';
-import api from '../../utils/api';
 
-
-import { upload_pdf, getPDFs } from '../../actions/pdf_upload';
+import { upload_pdf, getPDFs, addViews } from '../../actions/pdf_upload';
 
 const customStyles = {
   table:{
@@ -27,7 +25,7 @@ const customStyles = {
       paddingLeft: '8px', // override the cell padding for head cells
       paddingRight: '8px',
       fontSize:'16px',
-      background:'rgb(101 101 243 / 69%)'
+      background:'#28A745'
     },
   },
   cells: {
@@ -38,48 +36,45 @@ const customStyles = {
   },
 };
 
-const openPDF = (name, id) => {
-  window.open(`http://localhost:5000/api/pdf/${name}`);
-}
-
-const columns = [
-  {
-    name: "Title",
-    cell: row => <div data-tag="allowRowEvents" onClick={()=>openPDF(row.meta_data.filename, row._id)}><div style={{ color:'blue', cursor:'pointer'}}>{row.title}</div></div>,
-    sortable: true,
-    width:'20%'
-  },
-  {
-    name: "Uploader",
-    cell: row => `${row.uploader}`,
-    sortable: true,
-    width:'10%'
-  },
-  {
-    name: "Description",
-    cell: row => `${row.description}`,
-    width:'40%'
-  },
-  {
-    name: "Create_at",
-    cell: row => <Moment format="YYYY/MM/DD hh:mm">{row.create_at}</Moment>
-  },
-  {
-    name: "Views",
-    cell: row => `${row.views}`,
-    width:'10%',
-    sortable: true,
-    right: true,
-  }
-];
-
 const Dashboard = ({
   auth: { user },
   pdf, 
   upload_pdf,
   history,
-  getPDFs
+  getPDFs,
+  addViews
 }) => {
+
+  const columns = [
+    {
+      name: "Title",
+      cell: row => <div data-tag="allowRowEvents" onClick={()=>openPDF(row.changedName, row._id)}><div style={{ color:'blue', cursor:'pointer'}}>{row.title}</div></div>,
+      sortable: true,
+      width:'20%'
+    },
+    {
+      name: "Uploader",
+      cell: row => `${row.uploader}`,
+      sortable: true,
+      width:'10%'
+    },
+    {
+      name: "Description",
+      cell: row => `${row.description}`,
+      width:'40%'
+    },
+    {
+      name: "Create_at",
+      cell: row => <Moment format="YYYY/MM/DD hh:mm">{row.create_at}</Moment>
+    },
+    {
+      name: "Views",
+      cell: row => `${row.views}`,
+      width:'10%',
+      sortable: true,
+      right: true,
+    }
+  ];
 
   const [openModal, setOpenModal] = useState(false);
   const [selectFile, setSelectFile] = useState(null);
@@ -107,6 +102,10 @@ const Dashboard = ({
   }
 
   
+  const openPDF = (name, id) => {
+    addViews({ id : id }, history)
+    window.open(`http://localhost:5000/api/pdf/${name}`)
+  }
 
   return (
     <>
@@ -177,6 +176,7 @@ const Dashboard = ({
 Dashboard.propTypes = {
   upload_pdf: PropTypes.func,
   getPDFs : PropTypes.func,
+  addViews: PropTypes.func,
   auth: PropTypes.object.isRequired,
   pdf: PropTypes.object
 };
@@ -186,6 +186,6 @@ const mapStateToProps = (state) => ({
   pdf : state.pdf
 });
 
-export default connect(mapStateToProps, { upload_pdf, getPDFs })(
+export default connect(mapStateToProps, { upload_pdf, getPDFs, addViews })(
   Dashboard
 );
