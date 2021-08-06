@@ -37,6 +37,14 @@ router.post(
           .json({ errors: [{ msg: 'User already exists' }] });
       }
 
+      let same_name = await User.findOne({ name });
+      
+      if (same_name) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Same name already exists! Please write another name.' }] });
+      }
+
       const avatar = normalize(
         gravatar.url(email, {
           s: '200',

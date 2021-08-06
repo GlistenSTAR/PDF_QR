@@ -7,9 +7,9 @@ const File = require('../../models/pdf_files');
 
 const checkObjectId = require('../../middleware/checkObjectId');
 
-router.get('/', auth, async (req, res) => {
+router.post('/', auth, async (req, res) => {
   try {
-    const posts = await File.find().sort({ date: -1 });
+    const posts = await File.find({ uploader : req.body.name}).sort({ date: -1 });
     res.json(posts);
   } catch (err) {
     console.error(err.message);
