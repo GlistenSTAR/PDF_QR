@@ -5,9 +5,10 @@ import {
   PDF_ERROR
 } from './types';
 
-export const getPDFs = () => async dispatch =>{
+export const getPDFs = (name) => async dispatch =>{
   try {
-    const res = await api.get('/pdfs');
+    const uploader_name = {name : name};
+    const res = await api.post('/pdfs', uploader_name);
     dispatch({
       type: GET_PDFS,
       payload: res.data

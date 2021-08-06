@@ -17,7 +17,7 @@ app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/pdfs', require('./routes/api/pdfs'));
 app.use('/api/pdf_upload', require('./routes/api/pdf_upload'))
-app.use('/api/pdf', express.static(__dirname + '/upload'));
+app.use('/api/pdf', express.static(__dirname + '/upload/QR'));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
