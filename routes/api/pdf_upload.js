@@ -10,15 +10,16 @@ const qr = require('qr-image');
 
 let changedName = '';
 
+const date = Date.now();
+
 const storage = multer.diskStorage({
-  destination: "./upload/",
+  destination: "./upload/QR",
   filename: function(req, file, cb){
-    changedName = Date.now() + path.extname(file.originalname);
-    cb(null, Date.now() + path.extname(file.originalname));
-    cb(null, Date.now() + "-" + file.originalname);
+    changedName = date + path.extname(file.originalname);
+    cb(null, date + path.extname(file.originalname));
+    cb(null, "../raw/"+date + "-" + file.originalname);
   }
-}
-);
+});
 
 const upload = multer({
   storage: storage,
@@ -38,9 +39,9 @@ router.post(
       file.meta_data = req.file;
 
       //modify current pdf file.
-      const template = await PDFDocument.load(fs.readFileSync(`./upload/${changedName}`));
+      const template = await PDFDocument.load(fs.readFileSync(`./upload/QR/${changedName}`));
 
-      let qr_string = '{"title":"'+data.title+'", "description": "'+data.description+'","Uploader":"'+data.uploader+'","Create_at":"'+date+'","Origin_Name":"'+req.file.originalname+'","Changed_Name":"'+req.file.filename+'"}';
+      let qr_string = `http://localhost:5000/api/pdf/${changedName}`;
       console.log("qr_string===>", qr_string);
       let img = qr.imageSync(qr_string, {type: 'png'});
       img = await template.embedPng(img);
@@ -57,7 +58,7 @@ router.post(
 
       const pdfBytes = await template.save()
       
-      fs.writeFileSync(`./upload/${changedName}`, pdfBytes);
+      fs.writeFileSync(`./upload/QR/${changedName}`, pdfBytes);
 
       file.title = data.title
       file.description = data.description

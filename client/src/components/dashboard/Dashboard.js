@@ -37,12 +37,12 @@ const customStyles = {
 };
 
 const Dashboard = ({
-  auth: { user },
+  auth: { user, name },
   pdf, 
   upload_pdf,
   history,
   getPDFs,
-  addViews
+  addViews,
 }) => {
 
   const columns = [
@@ -84,9 +84,10 @@ const Dashboard = ({
   });
 
   useEffect(() => {
-    getPDFs();
+    const uploader = name || user.name || user || "";
+    console.log(uploader)
+    getPDFs(uploader);
   }, [getPDFs]);
-
 
   const onChangeHandler =(e) => {
     setSelectFile(e.target.files[0]);
@@ -101,11 +102,76 @@ const Dashboard = ({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
-  
   const openPDF = (name, id) => {
     addViews({ id : id }, history)
     window.open(`http://localhost:5000/api/pdf/${name}`)
   }
+
+  let content;
+  // if(user.role < 2){
+    content = (
+      <>
+        <Fragment>
+          <button className="btn btn-success my-1 btn-lg" onClick={() => setOpenModal(true)}>
+            Upload New PDF
+          </button>
+          <span className="text-danger" style={{display:'flex', alignItems:'center', justifyContent: 'center'}}>You can upload the new pdf on here.</span>  
+
+          <p className="mt-5 mb-3 lead">
+            <i className="fas fa-file-pdf"/> 
+            {' '}PDF Lists
+          </p>
+          <div className="list_pdf">
+            <DataTable
+              columns={columns}
+              data={pdf.pdfs ? pdf.pdfs:''}
+              defaultSortFieldId={1}
+              pagination
+              customStyles={customStyles}
+              selectableRows
+              striped
+              pointerOnHover
+            />
+          </div>
+        </Fragment>
+
+        <Modal 
+          show={openModal} 
+          onHide={()=> setOpenModal(false)}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+            <Modal.Header closeButton>
+              <Modal.Title>Upload PDF</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form onSubmit={ onClickHandler } className="form">
+                <div className="form-group mt-2">
+                  <label htmlFor="file">Select PDF : {' '}</label><br></br>
+                  <input type="file" name="file" onChange={onChangeHandler}  accept=".pdf"/>
+                </div>
+                <div className="form-group mt-2">
+                  <label htmlFor="title">Title : </label>
+                  <input type="text" name="title" className="form-control" onChange = { onChange }/>
+                </div>
+                <div className="form-group mt-2">
+                  <label htmlFor="description">Description : </label>
+                  <textarea name="description" className="form-control" onChange = { onChange } rows="4"/>
+                </div>
+                <div className="form-group mt-2">
+                  <button type="submit" className="btn btn-success from-control">Save</button>
+                </div>
+              </form>
+            </Modal.Body>
+        </Modal>
+      </>
+    );
+  // } else if(user.role == 2){
+  //   content = (
+  //     <h1>Admin Page</h1>
+  //   )
+  // }
 
   return (
     <>
@@ -114,60 +180,7 @@ const Dashboard = ({
         <p className="lead">
           <i className="fas fa-user"/> Welcome {user && user.name}
         </p>
-          <Fragment>
-            <button className="btn btn-success my-1 btn-lg" onClick={() => setOpenModal(true)}>
-              Upload New PDF
-            </button>
-            <span className="text-danger" style={{display:'flex', alignItems:'center', justifyContent: 'center'}}>You can upload the new pdf on here.</span>  
-
-            <p className="mt-5 mb-3 lead">
-              <i className="fas fa-file-pdf"/> 
-              {' '}PDF Lists
-            </p>
-            <div className="list_pdf">
-              <DataTable
-                columns={columns}
-                data={pdf.pdfs ? pdf.pdfs:''}
-                defaultSortFieldId={1}
-                pagination
-                customStyles={customStyles}
-                selectableRows
-                striped
-                pointerOnHover
-              />
-            </div>
-          </Fragment>
-
-          <Modal 
-            show={openModal} 
-            onHide={()=> setOpenModal(false)}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-          >
-              <Modal.Header closeButton>
-                <Modal.Title>Upload PDF</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <form onSubmit={ onClickHandler } className="form">
-                  <div className="form-group mt-2">
-                    <label htmlFor="file">Select PDF : {' '}</label><br></br>
-                    <input type="file" name="file" onChange={onChangeHandler}  accept=".pdf"/>
-                  </div>
-                  <div className="form-group mt-2">
-                    <label htmlFor="title">Title : </label>
-                    <input type="text" name="title" className="form-control" onChange = { onChange }/>
-                  </div>
-                  <div className="form-group mt-2">
-                    <label htmlFor="description">Description : </label>
-                    <textarea name="description" className="form-control" onChange = { onChange } rows="4"/>
-                  </div>
-                  <div className="form-group mt-2">
-                    <button type="submit" className="btn btn-success from-control">Save</button>
-                  </div>
-                </form>
-              </Modal.Body>
-          </Modal>
+        {content}
       </Fragment>
     </>
   );
@@ -178,7 +191,8 @@ Dashboard.propTypes = {
   getPDFs : PropTypes.func,
   addViews: PropTypes.func,
   auth: PropTypes.object.isRequired,
-  pdf: PropTypes.object
+  pdf: PropTypes.object,
+  name: PropTypes.string
 };
 
 const mapStateToProps = (state) => ({
