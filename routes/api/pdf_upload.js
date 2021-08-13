@@ -66,7 +66,7 @@ router.post(
       file.changedName = changedName
       file.save().then(()=>{
         res.send({ message : "uploaded successfully" })
-      })
+      }).then({message:'Upload failed'})
    });
   }
 );

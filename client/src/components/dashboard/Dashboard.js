@@ -43,6 +43,7 @@ const Dashboard = ({
   history,
   getPDFs,
   addViews,
+  loading
 }) => {
 
   const columns = [
@@ -108,7 +109,6 @@ const Dashboard = ({
   }
 
   let content;
-  // if(user.role < 2){
     content = (
       <>
         <Fragment>
@@ -167,13 +167,10 @@ const Dashboard = ({
         </Modal>
       </>
     );
-  // } else if(user.role == 2){
-  //   content = (
-  //     <h1>Admin Page</h1>
-  //   )
-  // }
 
-  return (
+  return loading || pdf.pdfs === null ?(
+    <Spinner />
+  ) : (
     <>
       <Fragment>
         <h1 className="large text-primary mt-5">Dashboard</h1>

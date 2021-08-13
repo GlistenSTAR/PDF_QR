@@ -2,7 +2,8 @@ import api from '../utils/api';
 import { setAlert } from './alert';
 import {
   GET_PDFS, 
-  PDF_ERROR
+  PDF_ERROR,
+  LOADING
 } from './types';
 
 export const getPDFs = (name) => async dispatch =>{
@@ -34,7 +35,10 @@ export const upload_pdf = (file, content, history, auth) => async dispatch => {
             'content-type': 'multipart/form-data'
         }
     };
-    await api.post('/pdf_upload', data, config);
+    dispatch({
+      type: LOADING
+    })
+    const res = await api.post('/pdf_upload', data, config);
     dispatch(setAlert('uploaded successfully', 'success'));
     history.push('/');
   } catch (err) {

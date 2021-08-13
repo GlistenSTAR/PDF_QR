@@ -9,7 +9,8 @@ export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 export const GET_PDFS = 'GET_PDFS';
 export const PDF_ERROR = 'PDF_ERROR';
-
+export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS'
+export const LOADING = 'LOADING'
 
 export const GET_PROFILE = 'GET_PROFILE';
 export const GET_PROFILES = 'GET_PROFILES';

@@ -1,6 +1,8 @@
 import {
   GET_PDFS,
   PDF_ERROR,
+  UPLOAD_SUCCESS,
+  LOADING
 } from '../actions/types';
 
 const initialState = {
@@ -20,18 +22,17 @@ function postReducer(state = initialState, action) {
         pdfs: payload,
         loading: false
       };
-    // case GET_POST:
-    //   return {
-    //     ...state,
-    //     post: payload,
-    //     loading: false
-    //   };
-    // case ADD_POST:
-    //   return {
-    //     ...state,
-    //     posts: [payload, ...state.posts],
-    //     loading: false
-    //   };
+    case UPLOAD_SUCCESS:
+      return {
+        ...state,
+        loading: false
+      };
+    case LOADING:
+      return {
+        ...state,
+        // posts: [payload, ...state.posts],
+        loading: true
+      };
     // case DELETE_POST:
     //   return {
     //     ...state,

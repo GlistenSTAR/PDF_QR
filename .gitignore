@@ -4,3 +4,4 @@ config/default.json
 client/build
 client/.eslintcache
 theme_db
+.git2
