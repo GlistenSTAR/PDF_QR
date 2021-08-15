@@ -46,36 +46,10 @@ const Dashboard = ({
   loading
 }) => {
 
-  const columns = [
-    {
-      name: "Title",
-      cell: row => <div data-tag="allowRowEvents" onClick={()=>openPDF(row.changedName, row._id)}><div style={{ color:'blue', cursor:'pointer'}}>{row.title}</div></div>,
-      sortable: true,
-      width:'20%'
-    },
-    {
-      name: "Uploader",
-      cell: row => `${row.uploader}`,
-      sortable: true,
-      width:'10%'
-    },
-    {
-      name: "Description",
-      cell: row => `${row.description}`,
-      width:'40%'
-    },
-    {
-      name: "Create_at",
-      cell: row => <Moment format="YYYY/MM/DD hh:mm">{row.create_at}</Moment>
-    },
-    {
-      name: "Views",
-      cell: row => `${row.views}`,
-      width:'10%',
-      sortable: true,
-      right: true,
-    }
-  ];
+  useEffect(() => {
+    const uploader = name || user.name || user || "";
+    getPDFs(uploader);
+  }, [getPDFs]);
 
   const [openModal, setOpenModal] = useState(false);
   const [selectFile, setSelectFile] = useState(null);
@@ -84,12 +58,40 @@ const Dashboard = ({
     description: ''
   });
 
-  useEffect(() => {
-    const uploader = name || user.name || user || "";
-    console.log(uploader)
-    getPDFs(uploader);
-  }, [getPDFs]);
+  let content;
 
+  const columns = [
+    {
+      name: "Title",
+      selector: row => <div data-tag="allowRowEvents" onClick={() => openPDF( row.changedName, row._id )} style={{ color:'blue', cursor:'pointer'}}>{row.title}</div>,
+      sortable: true,
+      width:'20%'
+    },
+    {
+      name: "Uploader",
+      selector: row => `${row.uploader}`,
+      sortable: true,
+      width:'10%'
+    },
+    {
+      name: "Description",
+      selector: row => `${row.description}`,
+      width:'40%'
+    },
+    {
+      name: "Create_at",
+      selector: row => <Moment format="YYYY/MM/DD hh:mm">{row.create_at}</Moment>,
+      sortable: true
+    },
+    {
+      name: "Views",
+      selector: row => `${row.views}`,
+      width:'10%',
+      sortable: true,
+      right: true,
+    }
+  ];
+  
   const onChangeHandler =(e) => {
     setSelectFile(e.target.files[0]);
   }
@@ -108,14 +110,13 @@ const Dashboard = ({
     window.open(`http://localhost:5000/api/pdf/${name}`)
   }
 
-  let content;
-    content = (
+  content = (
       <>
         <Fragment>
           <button className="btn btn-success my-1 btn-lg" onClick={() => setOpenModal(true)}>
             Upload New PDF
           </button>
-          <span className="text-danger" style={{display:'flex', alignItems:'center', justifyContent: 'center'}}>You can upload the new pdf on here.</span>  
+          <span className="text-danger" style={{ display:'flex', alignItems:'center', justifyContent: 'center' }}>You can upload the new pdf on here.</span>  
 
           <p className="mt-5 mb-3 lead">
             <i className="fas fa-file-pdf"/> 
@@ -123,14 +124,14 @@ const Dashboard = ({
           </p>
           <div className="list_pdf">
             <DataTable
-              columns={columns}
-              data={pdf.pdfs ? pdf.pdfs:''}
               defaultSortFieldId={1}
               pagination
               customStyles={customStyles}
               selectableRows
               striped
               pointerOnHover
+              columns={columns}
+              data={pdf.pdfs}
             />
           </div>
         </Fragment>
@@ -167,8 +168,8 @@ const Dashboard = ({
         </Modal>
       </>
     );
-
-  return loading || pdf.pdfs === null ?(
+  
+  return loading || pdf.pdfs === null ? (
     <Spinner />
   ) : (
     <>
@@ -177,7 +178,7 @@ const Dashboard = ({
         <p className="lead">
           <i className="fas fa-user"/> Welcome {user && user.name}
         </p>
-        {content}
+        { content }
       </Fragment>
     </>
   );

@@ -25,7 +25,6 @@ export const getPDFs = (name) => async dispatch =>{
 export const upload_pdf = (file, content, history, auth) => async dispatch => {
   console.log("uploading started....")
   content['uploader'] = auth.name
-  console.log(content)
   const data = new FormData() 
   data.append('pdf_file', file)
   data.append('data', JSON.stringify(content))
