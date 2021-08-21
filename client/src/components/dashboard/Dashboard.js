@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import DataTable from "react-data-table-component";
 import { Modal } from 'react-bootstrap';
+import Spinner from '../layout/Spinner'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Moment from 'react-moment';
+import isEmpty from '../../utils/is-empty'
+import AdminDashboard from '../admin/AdminDashboard';
 
 import { upload_pdf, getPDFs, addViews } from '../../actions/pdf_upload';
 
@@ -38,12 +41,11 @@ const customStyles = {
 
 const Dashboard = ({
   auth: { user, name },
-  pdf, 
+  pdf:{ loading, pdf, pdfs}, 
   upload_pdf,
   history,
   getPDFs,
-  addViews,
-  loading
+  addViews
 }) => {
 
   useEffect(() => {
@@ -58,7 +60,7 @@ const Dashboard = ({
     description: ''
   });
 
-  let content;
+  let content, adminHeader;
 
   const columns = [
     {
@@ -110,71 +112,81 @@ const Dashboard = ({
     window.open(`http://localhost:5000/api/pdf/${name}`)
   }
 
-  content = (
-      <>
-        <Fragment>
-          <button className="btn btn-success my-1 btn-lg" onClick={() => setOpenModal(true)}>
-            Upload New PDF
-          </button>
-          <span className="text-danger" style={{ display:'flex', alignItems:'center', justifyContent: 'center' }}>You can upload the new pdf on here.</span>  
-
-          <p className="mt-5 mb-3 lead">
-            <i className="fas fa-file-pdf"/> 
-            {' '}PDF Lists
-          </p>
-          <div className="list_pdf">
-            <DataTable
-              defaultSortFieldId={1}
-              pagination
-              customStyles={customStyles}
-              selectableRows
-              striped
-              pointerOnHover
-              columns={columns}
-              data={pdf.pdfs}
-            />
-          </div>
-        </Fragment>
-
-        <Modal 
-          show={openModal} 
-          onHide={()=> setOpenModal(false)}
-          size="lg"
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-        >
-            <Modal.Header closeButton>
-              <Modal.Title>Upload PDF</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <form onSubmit={ onClickHandler } className="form">
-                <div className="form-group mt-2">
-                  <label htmlFor="file">Select PDF : {' '}</label><br></br>
-                  <input type="file" name="file" onChange={onChangeHandler}  accept=".pdf"/>
-                </div>
-                <div className="form-group mt-2">
-                  <label htmlFor="title">Title : </label>
-                  <input type="text" name="title" className="form-control" onChange = { onChange }/>
-                </div>
-                <div className="form-group mt-2">
-                  <label htmlFor="description">Description : </label>
-                  <textarea name="description" className="form-control" onChange = { onChange } rows="4"/>
-                </div>
-                <div className="form-group mt-2">
-                  <button type="submit" className="btn btn-success from-control">Save</button>
-                </div>
-              </form>
-            </Modal.Body>
-        </Modal>
-      </>
-    );
+  if (!isEmpty(user)){
+    if(user.role === 1 || 0){
+      content = (
+        <>
+          <Fragment>
+            <button className="btn btn-success my-1 btn-lg" onClick={() => setOpenModal(true)}>
+              Upload New PDF
+            </button>
+            <span className="text-danger" style={{ display:'flex', alignItems:'center', justifyContent: 'center' }}>You can upload the new pdf on here.</span>  
+  
+            <p className="mt-5 mb-3 lead">
+              <i className="fas fa-file-pdf"/> 
+              {' '}PDF Lists
+            </p>
+            <div className="list_pdf">
+              <DataTable
+                noHeader
+                defaultSortField="title"
+                defaultSortAsc={false}
+                defaultSortFieldId={1}
+                pagination
+                customStyles={customStyles}
+                selectableRows
+                striped
+                columns={columns}
+                data={pdfs}
+              />
+            </div>
+          </Fragment>
+          <Modal 
+            show={openModal} 
+            onHide={()=> setOpenModal(false)}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+          >
+              <Modal.Header closeButton>
+                <Modal.Title>Upload PDF</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <form onSubmit={ onClickHandler } className="form">
+                  <div className="form-group mt-2">
+                    <label htmlFor="file">Select PDF : {' '}</label><br></br>
+                    <input type="file" name="file" onChange={onChangeHandler}  accept=".pdf"/>
+                  </div>
+                  <div className="form-group mt-2">
+                    <label htmlFor="title">Title : </label>
+                    <input type="text" name="title" className="form-control" onChange = { onChange }/>
+                  </div>
+                  <div className="form-group mt-2">
+                    <label htmlFor="description">Description : </label>
+                    <textarea name="description" className="form-control" onChange = { onChange } rows="4"/>
+                  </div>
+                  <div className="form-group mt-2">
+                    <button type="submit" className="btn btn-success from-control">Save</button>
+                  </div>
+                </form>
+              </Modal.Body>
+          </Modal>
+        </>
+      );    
+    } else {
+      adminHeader = "Admin";
+      content = (
+        <AdminDashboard user = {user}/>
+      );
+    }
+  }
   
   return loading || pdf.pdfs === null ? (
     <Spinner />
   ) : (
     <>
       <Fragment>
-        <h1 className="large text-primary mt-5">Dashboard</h1>
+        <h1 className="large text-primary mt-5">{adminHeader?adminHeader:''} Dashboard</h1>
         <p className="lead">
           <i className="fas fa-user"/> Welcome {user && user.name}
         </p>
