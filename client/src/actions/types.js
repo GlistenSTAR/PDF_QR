@@ -11,6 +11,8 @@ export const GET_PDFS = 'GET_PDFS';
 export const PDF_ERROR = 'PDF_ERROR';
 export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS'
 export const LOADING = 'LOADING'
+export const GET_USERS = 'GET_USERS'
+export const GET_ALLPDFS = 'GET_ALLPDFS'
 
 export const GET_PROFILE = 'GET_PROFILE';
 export const GET_PROFILES = 'GET_PROFILES';

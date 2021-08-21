@@ -4,7 +4,7 @@ import {
   USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
-  //LOGIN_FAIL,
+  GET_USERS,
   LOGOUT,
   ACCOUNT_DELETED
 } from '../actions/types';
@@ -14,7 +14,8 @@ const initialState = {
   isAuthenticated: null,
   loading: true,
   user: null, 
-  name: null
+  name: null,
+  users: null
 };
 
 function authReducer(state = initialState, action) {
@@ -37,6 +38,11 @@ function authReducer(state = initialState, action) {
         loading: false,
         name : payload.name,
       };
+    case GET_USERS:
+      return{
+        ...state,
+        users: payload
+      }
     case ACCOUNT_DELETED:
     case AUTH_ERROR:
     case LOGOUT:

@@ -7,14 +7,14 @@ import {
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
-  LOGOUT
+  LOGOUT,
+  GET_USERS
 } from './types';
 
 // Load User
 export const loadUser = () => async dispatch => {
   try {
     const res = await api.get('/auth');
-
     dispatch({
       type: USER_LOADED,
       payload: res.data
@@ -25,6 +25,20 @@ export const loadUser = () => async dispatch => {
     });
   }
 };
+
+export const getAllUsers = () => async dispatch => {
+  try{
+    const res = await api.get('/users/getAllUsers');
+    dispatch({
+      type: GET_USERS,
+      payload:res.data
+    });
+  } catch (err){
+    dispatch({
+      type: AUTH_ERROR
+    })
+  }
+}
 
 // Register User
 export const register = formData => async dispatch => {
@@ -74,6 +88,18 @@ export const login = (email, password) => async dispatch => {
     });
   }
 };
+
+//change the role
+export const changeAllowUser = (id) => async dispatch =>{
+  try{
+    const res = await api.put('/users', {id: id});
+    dispatch(getAllUsers());
+  } catch {
+    dispatch({
+      type: AUTH_ERROR
+    })
+  }
+}
 
 // Logout
 export const logout = () => ({ type: LOGOUT });
