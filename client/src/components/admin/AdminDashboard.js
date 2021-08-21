@@ -45,6 +45,11 @@ const AdminDashboard = ({
   changeAllowUser,
   changeAllowPDF
 }) => {
+
+  const openPDF = (name) => {
+    window.open(`http://localhost:5000/api/pdf/${name}`)
+  }
+
   const userColumuns = [
     {
       name: 'Name',
@@ -89,10 +94,11 @@ const AdminDashboard = ({
       sortable: true
     }
   ];
+
   const pdfColumuns = [
     {
       name: "Title",
-      selector: row => <div data-tag="allowRowEvents" onClick={() => openPDF( row.changedName, row._id )} style={{ color:'blue', cursor:'pointer'}}>{row.title}</div>,
+      selector: row => <div data-tag="allowRowEvents" onClick={() => openPDF( row.changedName )} style={{ color:'blue', cursor:'pointer'}}>{row.title}</div>,
       sortable: true,
       width:'20%'
     },
@@ -153,8 +159,11 @@ const AdminDashboard = ({
   return (
     <div className="admin">
       <div className="userlist">
+        <p className="mt-5 mb-3 lead">
+          <i className="fas fa-user"/> 
+          {' '}User Lists
+        </p>
        <DataTable
-          title="User list"
           columns={userColumuns}
           data = { users? users:''}
           customStyles={customStyles}
@@ -167,8 +176,11 @@ const AdminDashboard = ({
         />
       </div>
       <div className="pdflist">
+        <p className="mt-5 mb-3 lead">
+          <i className="fas fa-file-pdf"/> 
+          {' '}PDF Lists
+        </p>
        <DataTable
-          title="PDFS list"
           columns={pdfColumuns}
           data = { allpdfs? allpdfs:''}
           customStyles={customStyles}

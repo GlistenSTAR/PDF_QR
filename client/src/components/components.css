@@ -22,14 +22,14 @@
   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-size: 14px;
 }
-.admin .ok{
+.ok{
   background: url('../img/ok.png') no-repeat;
   width: 20px;
   height: 20px;
   background-position: center;
   background-size: 100% 100%;
 }
-.admin .pending{
+.pending{
   background:url('../img/pending.png') no-repeat;
   width: 20px;
   height: 20px;

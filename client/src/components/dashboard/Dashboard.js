@@ -65,7 +65,16 @@ const Dashboard = ({
   const columns = [
     {
       name: "Title",
-      selector: row => <div data-tag="allowRowEvents" onClick={() => openPDF( row.changedName, row._id )} style={{ color:'blue', cursor:'pointer'}}>{row.title}</div>,
+      selector: row => 
+        <div 
+          data-tag="allowRowEvents" 
+          onClick={
+            () =>{ 
+              if(row.status ===1) 
+                openPDF( row.changedName, row._id )
+              }
+            } 
+          style={{ color:'blue', cursor:'pointer'}}>{row.title}</div>,
       sortable: true,
       width:'20%'
     },
@@ -78,7 +87,6 @@ const Dashboard = ({
     {
       name: "Description",
       selector: row => `${row.description}`,
-      width:'40%'
     },
     {
       name: "Create_at",
@@ -91,7 +99,20 @@ const Dashboard = ({
       width:'10%',
       sortable: true,
       right: true,
-    }
+    },
+    {
+      name: 'Status',
+      selector: row => `${row.status}`,
+      cell: row => { 
+        if(row.status === 1) {
+          return (<div className="ok"/> )
+        } else { 
+          return (<div className="pending"/> )
+        }
+      },
+      sortable: true,
+      center: true
+    },
   ];
   
   const onChangeHandler =(e) => {
