@@ -17,6 +17,16 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
+router.get('/getAllPDFS', auth, async (req, res) => {
+  try {
+    const pdfs = await File.find();
+    res.json(pdfs);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 router.post('/addViews', auth, async (req, res) => {
   console.log(req.body.id)
   try {
@@ -28,5 +38,14 @@ router.post('/addViews', auth, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
+//change the allow
+router.put('/', auth, async (req, res) => {
+  pdf = await File.findById(req.body.id);
+  pdf.status = !pdf.status;
+  await pdf.save()
+  .then(()=>res.json('success'))
+  .catch(err =>console.log(err));
+})
 
 module.exports = router;
