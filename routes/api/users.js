@@ -6,8 +6,26 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
 const normalize = require('normalize-url');
+const auth = require('../../middleware/auth');
 
 const User = require('../../models/User');
+
+// @route    GET api/users/getAllusers
+// @desc     Register user
+// @access   Public
+router.get(
+  '/getAllUsers',
+  auth,
+  async(req, res) => {
+    try{
+      const users = await User.find({'role' : { $lt :  2 }});
+      res.json(users);
+    } catch(err){
+      console.log(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
 
 // @route    POST api/users
 // @desc     Register user
@@ -89,4 +107,18 @@ router.post(
   }
 );
 
+// @route    PUT api/users
+// @desc     change user role
+// @access   Public
+router.put(
+  '/',
+  auth,
+  async(req, res) =>{
+    user = await User.findById(req.body.id);
+    user.role = !user.role;
+    await user.save()
+    .then(()=>res.json('success'))
+    .catch(err =>console.log(err));
+  }
+);
 module.exports = router;
