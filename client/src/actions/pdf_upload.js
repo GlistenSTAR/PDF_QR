@@ -3,7 +3,8 @@ import { setAlert } from './alert';
 import {
   GET_PDFS, 
   PDF_ERROR,
-  LOADING
+  LOADING,
+  GET_ALLPDFS,
 } from './types';
 
 export const getPDFs = (name) => async dispatch =>{
@@ -19,6 +20,20 @@ export const getPDFs = (name) => async dispatch =>{
       type: PDF_ERROR,
       payload: { msg: err.response }
     });
+  }
+}
+
+export const getAllPDFS = () => async dispatch => {
+  try{
+    const res = await api.get('/pdfs/getAllPDFS');
+    dispatch({
+      type: GET_ALLPDFS,
+      payload:res.data
+    });
+  } catch (err){
+    dispatch({
+      type: PDF_ERROR
+    })
   }
 }
 
@@ -61,6 +76,17 @@ export const addViews = (id, history) => async dispatch =>{
       type: PDF_ERROR,
       payload: { msg: err.response }
     });
+  }
+}
+
+export const changeAllowPDF = (id) => async dispatch => {
+  try{
+    const res = await api.put('/pdfs', {id: id});
+    dispatch(getAllPDFS());
+  } catch {
+    dispatch({
+      type: AUTH_ERROR
+    })
   }
 }
 
