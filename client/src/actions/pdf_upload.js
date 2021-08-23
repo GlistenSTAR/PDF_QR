@@ -39,7 +39,8 @@ export const getAllPDFS = () => async dispatch => {
 
 export const upload_pdf = (file, content, history, auth) => async dispatch => {
   console.log("uploading started....")
-  content['uploader'] = auth.name
+  content['uploader'] = auth.name;
+  content['id'] = auth._id;
   const data = new FormData() 
   data.append('pdf_file', file)
   data.append('data', JSON.stringify(content))
@@ -52,7 +53,7 @@ export const upload_pdf = (file, content, history, auth) => async dispatch => {
     dispatch({
       type: LOADING
     })
-    const res = await api.post('/pdf_upload', data, config);
+    await api.post('/pdf_upload', data, config);
     dispatch(setAlert('uploaded successfully', 'success'));
     history.push('/');
   } catch (err) {
@@ -81,11 +82,11 @@ export const addViews = (id, history) => async dispatch =>{
 
 export const changeAllowPDF = (id) => async dispatch => {
   try{
-    const res = await api.put('/pdfs', {id: id});
+    await api.put('/pdfs', {id: id});
     dispatch(getAllPDFS());
   } catch {
     dispatch({
-      type: AUTH_ERROR
+      type: PDF_ERROR
     })
   }
 }

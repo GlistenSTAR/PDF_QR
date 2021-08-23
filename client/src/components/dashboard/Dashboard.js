@@ -51,7 +51,7 @@ const Dashboard = ({
   useEffect(() => {
     const uploader = name || user.name || user || "";
     getPDFs(uploader);
-  }, [getPDFs]);
+  }, [getPDFs, name, user]);
 
   const [openModal, setOpenModal] = useState(false);
   const [selectFile, setSelectFile] = useState(null);
@@ -70,8 +70,11 @@ const Dashboard = ({
           data-tag="allowRowEvents" 
           onClick={
             () =>{ 
-              if(row.status ===1) 
-                openPDF( row.changedName, row._id )
+                if(row.status ===1) { 
+                  openPDF( row.changedName, row._id )
+                } else {
+                  window.alert('Sorry. This document under review. Please wait admin acceptance...')
+                } 
               }
             } 
           style={{ color:'blue', cursor:'pointer'}}>{row.title}</div>,
@@ -134,11 +137,11 @@ const Dashboard = ({
   }
 
   if (!isEmpty(user)){
-    if(user.role === 1 || 0){
+    if(user.role <= 1 ){
       content = (
         <>
           <Fragment>
-            <button className="btn btn-success my-1 btn-lg" onClick={() => setOpenModal(true)}>
+            <button className="btn btn-success my-1 btn-lg" onClick={ () => setOpenModal(true) }>
               Upload New PDF
             </button>
             <span className="text-danger" style={{ display:'flex', alignItems:'center', justifyContent: 'center' }}>You can upload the new pdf on here.</span>  
@@ -175,16 +178,16 @@ const Dashboard = ({
               <Modal.Body>
                 <form onSubmit={ onClickHandler } className="form">
                   <div className="form-group mt-2">
-                    <label htmlFor="file">Select PDF : {' '}</label><br></br>
-                    <input type="file" name="file" onChange={onChangeHandler}  accept=".pdf"/>
+                    <label htmlFor="file">Select PDF : {' '}</label> <br/>
+                    <input type="file" name="file" onChange={onChangeHandler}  accept=".pdf" required/>
                   </div>
                   <div className="form-group mt-2">
                     <label htmlFor="title">Title : </label>
-                    <input type="text" name="title" className="form-control" onChange = { onChange }/>
+                    <input type="text" name="title" className="form-control" onChange = { onChange } required/>
                   </div>
                   <div className="form-group mt-2">
                     <label htmlFor="description">Description : </label>
-                    <textarea name="description" className="form-control" onChange = { onChange } rows="4"/>
+                    <textarea name="description" className="form-control" onChange = { onChange } rows="4" required/>
                   </div>
                   <div className="form-group mt-2">
                     <button type="submit" className="btn btn-success from-control">Save</button>
@@ -194,7 +197,7 @@ const Dashboard = ({
           </Modal>
         </>
       );    
-    } else {
+    } else if(user.role === 2) {
       adminHeader = "Admin";
       content = (
         <AdminDashboard user = {user}/>
@@ -218,9 +221,9 @@ const Dashboard = ({
 };
 
 Dashboard.propTypes = {
-  upload_pdf: PropTypes.func,
-  getPDFs : PropTypes.func,
-  addViews: PropTypes.func,
+  upload_pdf: PropTypes.func.isRequired,
+  getPDFs : PropTypes.func.isRequired,
+  addViews: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   pdf: PropTypes.object,
   name: PropTypes.string
