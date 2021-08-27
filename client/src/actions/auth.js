@@ -101,5 +101,18 @@ export const changeAllowUser = (id) => async dispatch =>{
   }
 }
 
+export const forgot = (email) => async dispatch => {
+  try{
+    const res = await api.post('/auth/forgot', { email : email });
+    dispatch(setAlert("We send the link to your email.", 'primary'));
+  } catch (err){
+    const errors = err.response.data.errors;
+    console.log(errors);
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+  }
+}
+
 // Logout
 export const logout = () => ({ type: LOGOUT });

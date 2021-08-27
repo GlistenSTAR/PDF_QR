@@ -7,6 +7,7 @@ const config = require('config');
 const { check, validationResult } = require('express-validator');
 
 const User = require('../../models/User');
+const sendEmail = require('./Sendmail');
 
 // @route    GET api/auth
 // @desc     Get user by token
@@ -80,5 +81,36 @@ router.post(
     }
   }
 );
+
+router.post(
+    '/forgot',
+    check('email', 'Please include a valid email').isEmail(),
+    async (req, res) =>{
+        const { email } = req.body;
+        try {
+          let user = await User.findOne({email: email});
+          if(!user){
+              console.log("it's not registed")
+              return res
+                  .status(400)
+                  .json({ errors: [{ msg: 'Please check your email. It\'s not registerd email.' }] });
+          }
+
+          const content = {
+            Subject: "Tu cita en Chigui",
+            HTMLPart: "<div style='font-family:'PT Sans',Helvetica,Arial;max-width:700px; width: 100%;margin-left: auto;margin-right: auto;'>\
+                         Hello\
+                        </div>",
+            TextPart: "",
+            CustomID: ""
+          }
+          sendEmail(req.body.email, content)
+          return res.json({msg: "success sended!"})
+
+        } catch (err) {
+          console.error(err.message);
+          res.status(500).send('Server error');
+        }
+    });
 
 module.exports = router;
