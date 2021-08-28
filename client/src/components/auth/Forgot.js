@@ -25,7 +25,7 @@ const Forgot = ({ forgot, isAuthenticated }) => {
 
   return (
       <Fragment>
-        <div className="auth_component" align="center">
+        <div className="auth_component forgot" align="center">
           <h1 className="large text-primary">Forgot password</h1>
           <p className="lead">
             <i className="fas fa-lock" /> Recovery your password
@@ -44,7 +44,7 @@ const Forgot = ({ forgot, isAuthenticated }) => {
             <input type="submit" className="btn btn-primary mt-3" />
           </form>
           <p className="my-1 mt-3" style={{display: 'flex', justifyContent: 'space-around'}}>
-            <span>Did you recovery password? <Link to="/login">Login</Link></span>
+            <span className="col-sm-12">Did you recovery password? <Link to="/login" className="col-sm-12">Login</Link></span>
           </p>
         </div>
       </Fragment>

@@ -8,7 +8,8 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  GET_USERS
+  GET_USERS,
+  GET_CURRENT_USER
 } from './types';
 
 // Load User
@@ -108,6 +109,35 @@ export const forgot = (email) => async dispatch => {
   } catch (err){
     const errors = err.response.data.errors;
     console.log(errors);
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+  }
+}
+
+export const getUser = (id) => async dispatch => {
+  try {
+    const res = await api.post('/auth/getUser', { id : id});
+    dispatch({
+      type: GET_CURRENT_USER,
+      payload: res.data
+    });
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+  }
+}
+
+//Changed password
+export const savePassword = (id, password, history) => async dispatch => {
+  try{
+    await api.post('/auth/save_password', {id: id, new_password: password})
+    dispatch(setAlert("Password is changed successfully.", 'primary'));
+    history.push('/login');
+  } catch (err) {
+    const errors = err.response.data.errors;
     if (errors) {
       errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
     }

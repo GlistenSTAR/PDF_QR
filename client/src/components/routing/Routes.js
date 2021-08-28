@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import Register from '../auth/Register';
 import Login from '../auth/Login';
 import Forgot from '../auth/Forgot';
+import ChangePassword from '../auth/ChangePassword'
 import Alert from '../layout/Alert';
 import Dashboard from '../dashboard/Dashboard';
 import NotFound from '../layout/NotFound';
@@ -18,6 +19,7 @@ const Routes = props => {
         <Route exact path="/register" component={ Register } />
         <Route exact path="/login" component={ Login } />
         <Route exact path="/forgot" component={ Forgot } />
+        <Route exact path="/change_password" component={ ChangePassword } />
         <PrivateRoute exact path="/dashboard" component={ Dashboard } />
         <Route component={NotFound} />
       </Switch>

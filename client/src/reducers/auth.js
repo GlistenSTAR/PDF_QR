@@ -1,6 +1,6 @@
 import {
   REGISTER_SUCCESS,
-  //REGISTER_FAIL,
+  GET_CURRENT_USER,
   USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
@@ -15,7 +15,8 @@ const initialState = {
   loading: true,
   user: null, 
   name: null,
-  users: null
+  users: null,
+  current_user:null
 };
 
 function authReducer(state = initialState, action) {
@@ -53,6 +54,11 @@ function authReducer(state = initialState, action) {
         loading: false,
         user: null
       };
+    case GET_CURRENT_USER:
+      return {
+        ...state,
+        current_user: payload
+      }
     default:
       return state;
   }

@@ -81,7 +81,7 @@ router.post(
     }
   }
 );
-
+//forgot password
 router.post(
     '/forgot',
     check('email', 'Please include a valid email').isEmail(),
@@ -99,7 +99,8 @@ router.post(
           const content = {
             Subject: "Tu cita en Chigui",
             HTMLPart: "<div style='font-family:'PT Sans',Helvetica,Arial;max-width:700px; width: 100%;margin-left: auto;margin-right: auto;'>\
-                         Hello\
+                         Hello, "+ user.name +"! This is your recovery password link.<br>"
+                         +"http://3.16.143.216/change_password?id="+user.id+"\
                         </div>",
             TextPart: "",
             CustomID: ""
@@ -112,5 +113,49 @@ router.post(
           res.status(500).send('Server error');
         }
     });
+
+//change the password
+router.post(
+  '/getUser',
+  async (req, res) => {
+    const { id } = req.body;
+    try {
+      let user = await User.findById(id);
+      if(!user){
+        return res
+                  .status(400)
+                  .json({ errors: [{ msg: 'This is wrong user' }] });
+      }
+      return res.json(user);
+    } catch {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
+  })
+
+//change with new password
+router.post(
+  '/save_password',
+  async (req, res) => {
+    const {id, new_password} = req.body
+    try {
+      let user = await User.findById(id);
+      if(!user){
+        return res
+                  .status(400)
+                  .json({ errors: [{ msg: 'This is wrong user' }] });
+      }
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(new_password, salt);
+      await user.save()
+      .then(()=>{
+        return res.json({msg: "success sended!"})
+      });
+
+    } catch {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
+  })
 
 module.exports = router;

@@ -13,6 +13,7 @@ export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS'
 export const LOADING = 'LOADING'
 export const GET_USERS = 'GET_USERS'
 export const GET_ALLPDFS = 'GET_ALLPDFS'
+export const GET_CURRENT_USER = 'GET_CURRENT_USER'
 
 export const GET_PROFILE = 'GET_PROFILE';
 export const GET_PROFILES = 'GET_PROFILES';
