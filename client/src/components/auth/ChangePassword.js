@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import { setAlert } from '../../actions/alert';
 import PropTypes from 'prop-types';
 import { getUser, savePassword } from '../../actions/auth';
-
-const params = new URLSearchParams(window.location.search)
+const queryString = require('query-string');
 
 const ChangePassword = ({ 
     getUser,
@@ -16,7 +15,10 @@ const ChangePassword = ({
     history
   }) => {
 
+    const parsed = queryString.parse(location.search);
+
   useEffect(() => {
+    console.log(parsed.id);
     getUser(params.get('id'));
   }, [getUser]);
   
