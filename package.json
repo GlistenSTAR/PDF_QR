@@ -22,7 +22,7 @@
     "express-validator": "^6.8.1",
     "gravatar": "^1.8.1",
     "hummus": "^1.0.110",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^5.11.8",
     "multer": "^1.4.2",
     "node-mailjet": "^3.3.4",
