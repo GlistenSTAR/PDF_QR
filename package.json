@@ -23,7 +23,7 @@
     "gravatar": "^1.8.1",
     "hummus": "^1.0.110",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.11.8",
+    "mongoose": "^5.13.15",
     "multer": "^1.4.2",
     "node-mailjet": "^3.3.4",
     "normalize-url": "^5.3.0",
